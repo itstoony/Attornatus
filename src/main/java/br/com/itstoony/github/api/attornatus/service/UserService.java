@@ -26,6 +26,7 @@ public class UserService {
     public Users insertByRecord(UserRecord userRecord) {
 
         var address = addressService.findByCep(userRecord.cep());
+        address.setHouseNumber(userRecord.number());
         addressService.insert(address);
 
         Users user = Users.builder()
@@ -59,11 +60,6 @@ public class UserService {
 
     @Transactional
     public void update(Users user, UserRecord userRecord) {
-
-        if (userRecord.cep() != null) {
-            var updatedAddress = addressService.findByCep(userRecord.cep());
-            user.setAddress(new ArrayList<>(Collections.singletonList(updatedAddress)));
-        }
 
         if (userRecord.name() != null) {
             user.setName(userRecord.name());
