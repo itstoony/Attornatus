@@ -1,6 +1,7 @@
 package br.com.itstoony.github.api.attornatus.controller;
 
 import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
+import br.com.itstoony.github.api.attornatus.model.dto.UsersDto;
 import br.com.itstoony.github.api.attornatus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,6 +28,16 @@ public class UserController {
 
         return ResponseEntity.created(uri).build();
     }
+
+    @GetMapping(path = "/{id}")
+    public ResponseEntity<UsersDto> findById(@PathVariable Long id) {
+        var user = userService.findById(id);
+
+        var dto = userService.toDto(user);
+
+        return ResponseEntity.ok(dto);
+    }
+
 
     @PutMapping(path = "/{id}")
     public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRecord userRecord) {

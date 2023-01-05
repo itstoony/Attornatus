@@ -2,6 +2,7 @@ package br.com.itstoony.github.api.attornatus.service;
 
 import br.com.itstoony.github.api.attornatus.model.Users;
 import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
+import br.com.itstoony.github.api.attornatus.model.dto.UsersDto;
 import br.com.itstoony.github.api.attornatus.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,4 +76,12 @@ public class UserService {
         insert(user);
     }
 
+    public UsersDto toDto(Users user) {
+        return UsersDto.builder()
+                .id(user.getId())
+                .name(user.getName())
+                .birthDay(user.getBirthDay())
+                .addressList(user.getAddress())
+                .build();
+    }
 }
