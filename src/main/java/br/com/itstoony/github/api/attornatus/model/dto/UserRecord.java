@@ -4,6 +4,4 @@ import java.time.LocalDate;
 
 public record UserRecord(String name, LocalDate birthDay, String cep) {
 
-
-
 }

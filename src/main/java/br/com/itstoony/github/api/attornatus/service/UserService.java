@@ -3,8 +3,10 @@ package br.com.itstoony.github.api.attornatus.service;
 import br.com.itstoony.github.api.attornatus.model.Users;
 import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
 import br.com.itstoony.github.api.attornatus.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -41,6 +43,36 @@ public class UserService {
 
     public void insert(Users users) {
         userRepository.save(users);
+    }
+
+    public Users findById(Long id) {
+
+        var op = userRepository.findById(id);
+
+        if (op.isEmpty()) {
+            throw new EntityNotFoundException("Invalid ID");
+        }
+
+        return op.get();
+    }
+
+    @Transactional
+    public void update(Users user, UserRecord userRecord) {
+
+        if (userRecord.cep() != null) {
+            var updatedAddress = addressService.findByCep(userRecord.cep());
+            user.setAddress(new ArrayList<>(Collections.singletonList(updatedAddress)));
+        }
+
+        if (userRecord.name() != null) {
+            user.setName(userRecord.name());
+        }
+
+        if (userRecord.birthDay() != null) {
+            user.setBirthDay(userRecord.birthDay());
+        }
+
+        insert(user);
     }
 
 }
