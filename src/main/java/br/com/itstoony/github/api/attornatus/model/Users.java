@@ -1,14 +1,20 @@
 package br.com.itstoony.github.api.attornatus.model;
 
 import jakarta.persistence.*;
-import lombok.Getter;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.List;
+
 
 @Getter
+@Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "users")
+public class Users {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,8 +26,10 @@ public class User {
     @Column(name = "birthDay")
     private LocalDate birthDay;
 
-    @OneToOne
-    @JoinColumn(name = "address_id")
-    private Address address;
+    @Column(name = "registrationDate")
+    private LocalDate registrationDate;
+
+    @OneToMany(mappedBy = "users")
+    private List<Address> address;
 
 }

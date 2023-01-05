@@ -1,4 +1,4 @@
-package br.com.itstoony.github.api.attornatus.dto;
+package br.com.itstoony.github.api.attornatus.model.dto;
 
 import lombok.Data;
 

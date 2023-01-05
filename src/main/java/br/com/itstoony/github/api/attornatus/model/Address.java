@@ -2,13 +2,13 @@ package br.com.itstoony.github.api.attornatus.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @Table(name = "address")
 @Builder
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 public class Address {
@@ -34,7 +34,7 @@ public class Address {
     private String zipcode;
 
     @JsonIgnore
-    @OneToOne
-    private User user;
+    @ManyToOne
+    private Users users;
 
 }
