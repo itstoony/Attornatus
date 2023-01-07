@@ -36,6 +36,9 @@ public class Address {
     @Column(name = "zipcode")
     private String zipcode;
 
+    @Column(name = "main")
+    private Boolean main;
+
     @JsonIgnore
     @ManyToOne
     private Users users;

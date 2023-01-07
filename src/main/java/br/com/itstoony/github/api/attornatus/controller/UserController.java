@@ -3,6 +3,7 @@ package br.com.itstoony.github.api.attornatus.controller;
 import br.com.itstoony.github.api.attornatus.model.Address;
 import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
 import br.com.itstoony.github.api.attornatus.model.dto.UsersDto;
+import br.com.itstoony.github.api.attornatus.service.AddressService;
 import br.com.itstoony.github.api.attornatus.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +19,10 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AddressService addressService;
+
 
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody UserRecord record) {
@@ -69,6 +74,17 @@ public class UserController {
                 .buildAndExpand(address.getId()).toUri();
 
         return ResponseEntity.created(uri).build();
+    }
+
+    @PutMapping(path = "/{userId}/address/{addressId}")
+    public ResponseEntity<Void> setMainAddress(@PathVariable Long userId, @PathVariable Long addressId) {
+        var user = userService.findById(userId);
+
+        var address = addressService.findById(addressId);
+
+        userService.setMainAddress(user, address);
+
+        return ResponseEntity.ok().build();
     }
 
 }

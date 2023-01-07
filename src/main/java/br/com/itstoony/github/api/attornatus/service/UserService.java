@@ -5,6 +5,7 @@ import br.com.itstoony.github.api.attornatus.model.Users;
 import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
 import br.com.itstoony.github.api.attornatus.model.dto.UsersDto;
 import br.com.itstoony.github.api.attornatus.repository.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,6 +24,7 @@ public class UserService {
     private AddressService addressService;
 
 
+    @Transactional
     public Users insertByRecord(UserRecord userRecord) {
 
         var address = addressService.findByCep(userRecord.cep());
@@ -36,6 +38,7 @@ public class UserService {
                 .registrationDate(LocalDate.now())
                 .build();
 
+        user.getAddress().get(0).setMain(true);
         insert(user);
         address.setUsers(user);
         addressService.insert(address);
@@ -49,7 +52,7 @@ public class UserService {
 
     public Users findById(Long id) {
         var op = userRepository.findById(id);
-        return op.orElseThrow(() -> new RuntimeException("Invalid id"));
+        return op.orElseThrow(() -> new EntityNotFoundException("Invalid User ID"));
     }
 
     @Transactional
@@ -75,6 +78,7 @@ public class UserService {
                 .build();
     }
 
+    @Transactional
     public Address addAddress(Users user, UserRecord record) {
         var address = addressService.findByCep(record.cep());
         address.setHouseNumber(record.number());
@@ -88,4 +92,20 @@ public class UserService {
 
         return address;
     }
+
+    @Transactional
+    public void setMainAddress(Users user, Address address) {
+        var addressList = user.getAddress();
+        addressList.forEach(a -> a.setMain(false));
+
+        if (!user.getAddress().contains(address)) {
+            throw new RuntimeException("Users addressList doesn't contain refered Address");
+        }
+
+        address.setMain(true);
+
+        insert(user);
+        addressService.insert(address);
+    }
+
 }
