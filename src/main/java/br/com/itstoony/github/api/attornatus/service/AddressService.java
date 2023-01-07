@@ -1,10 +1,12 @@
 package br.com.itstoony.github.api.attornatus.service;
 
-import br.com.itstoony.github.api.attornatus.dto.AddressDto;
 import br.com.itstoony.github.api.attornatus.model.Address;
+import br.com.itstoony.github.api.attornatus.model.dto.AddressDto;
 import br.com.itstoony.github.api.attornatus.repository.AddressRepository;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 @Service
@@ -32,6 +34,7 @@ public class AddressService {
                 .build();
     }
 
+    @Transactional
     public void insert(Address address) {
         addressRepository.save(address);
     }
@@ -41,4 +44,8 @@ public class AddressService {
         return fromDto(dto);
     }
 
+    public Address findById(Long id) {
+        var op = addressRepository.findById(id);
+        return op.orElseThrow(() -> new EntityNotFoundException("Invalid Address ID"));
+    }
 }
