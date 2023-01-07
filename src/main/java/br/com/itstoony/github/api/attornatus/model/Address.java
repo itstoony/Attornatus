@@ -18,7 +18,7 @@ public class Address {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "houseNumber")
+    @Column(name = "houseNumber", unique = true)
     private String houseNumber;
 
     @Column(name = "street")
