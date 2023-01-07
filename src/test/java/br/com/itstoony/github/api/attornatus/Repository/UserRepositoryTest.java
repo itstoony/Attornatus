@@ -39,14 +39,14 @@ public class UserRepositoryTest {
 
         // scenary
         var user = usersBuilder();
-        userRepository.save(user);
+        var saved = userRepository.save(user);
 
         // execution
-        var found = userRepository.findById(user.getId());
+        var found = userRepository.findById(saved.getId());
 
         // validation
         Assertions.assertThat(found.isPresent()).isTrue();
-        Assertions.assertThat(found.get().getId()).isEqualTo(user.getId());
+        Assertions.assertThat(found.get().getId()).isEqualTo(saved.getId());
     }
 
     private static Users usersBuilder() {
