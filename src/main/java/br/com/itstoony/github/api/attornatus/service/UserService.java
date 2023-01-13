@@ -64,13 +64,14 @@ public class UserService {
 
         if (userRecord.name() != null) {
             user.setName(userRecord.name());
+            insert(user);
         }
 
         if (userRecord.birthDay() != null) {
             user.setBirthDay(userRecord.birthDay());
+            insert(user);
         }
 
-        insert(user);
     }
 
     public UsersDto toDto(Users user) {
