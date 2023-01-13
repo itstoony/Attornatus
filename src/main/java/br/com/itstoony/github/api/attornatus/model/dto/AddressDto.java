@@ -1,8 +1,10 @@
 package br.com.itstoony.github.api.attornatus.model.dto;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class AddressDto {
 
     private String cep;
