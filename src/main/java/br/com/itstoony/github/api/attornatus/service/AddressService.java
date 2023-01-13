@@ -15,6 +15,10 @@ public class AddressService {
     @Autowired
     private AddressRepository addressRepository;
 
+    public AddressService(AddressRepository addressRepository) {
+        this.addressRepository = addressRepository;
+    }
+
     /*
      * Consuming "via cep" webservice to get location by zipcode "cep"
      * https://viacep.com.br/
