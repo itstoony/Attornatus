@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class UserRepositoryTest {
 
     @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     @Test
     @DisplayName("Should return true when insert a valid user in database")

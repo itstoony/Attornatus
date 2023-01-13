@@ -23,6 +23,10 @@ public class UserService {
     @Autowired
     private AddressService addressService;
 
+    public UserService(UserRepository userRepository) {
+        this.userRepository = userRepository;
+    }
+
 
     @Transactional
     public Users insertByRecord(UserRecord userRecord) {
@@ -46,8 +50,8 @@ public class UserService {
         return user;
     }
 
-    public void insert(Users users) {
-        userRepository.save(users);
+    public Users insert(Users users) {
+        return userRepository.save(users);
     }
 
     public Users findById(Long id) {
@@ -60,13 +64,14 @@ public class UserService {
 
         if (userRecord.name() != null) {
             user.setName(userRecord.name());
+            insert(user);
         }
 
         if (userRecord.birthDay() != null) {
             user.setBirthDay(userRecord.birthDay());
+            insert(user);
         }
 
-        insert(user);
     }
 
     public UsersDto toDto(Users user) {
@@ -108,4 +113,7 @@ public class UserService {
         addressService.insert(address);
     }
 
+    public void setAddressService(AddressService addressService) {
+        this.addressService = addressService;
+    }
 }
