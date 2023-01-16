@@ -1,10 +1,12 @@
 package br.com.itstoony.github.api.attornatus.controller;
 
 import br.com.itstoony.github.api.attornatus.model.Address;
+import br.com.itstoony.github.api.attornatus.model.Users;
 import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
 import br.com.itstoony.github.api.attornatus.model.dto.UsersDto;
 import br.com.itstoony.github.api.attornatus.service.AddressService;
 import br.com.itstoony.github.api.attornatus.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,7 +27,7 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody UserRecord record) {
+    public ResponseEntity<Void> create(@RequestBody @Valid UserRecord record) {
         var user = userService.insertByRecord(record);
 
         userService.insert(user);
@@ -47,13 +49,15 @@ public class UserController {
 
 
     @PutMapping(path = "/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody UserRecord record) {
+    public ResponseEntity<UsersDto> update(@PathVariable Long id, @RequestBody @Valid UserRecord record) {
 
         var user = userService.findById(id);
 
-        userService.update(user, record);
+        Users updatedUser = userService.update(user, record);
 
-        return ResponseEntity.ok().build();
+        UsersDto dto = userService.toDto(updatedUser);
+
+        return ResponseEntity.ok().body(dto);
 
     }
 
@@ -65,7 +69,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/{id}/address")
-    public ResponseEntity<Void> addAddress(@PathVariable Long id, @RequestBody UserRecord record) {
+    public ResponseEntity<Void> addAddress(@PathVariable Long id, @RequestBody @Valid UserRecord record) {
         var user = userService.findById(id);
 
         var address = userService.addAddress(user, record);
