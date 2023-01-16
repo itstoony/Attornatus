@@ -39,8 +39,8 @@ public class AddressService {
     }
 
     @Transactional
-    public void insert(Address address) {
-        addressRepository.save(address);
+    public Address insert(Address address) {
+        return addressRepository.save(address);
     }
 
     public Address findByCep(String cep) {

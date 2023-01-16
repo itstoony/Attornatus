@@ -60,7 +60,7 @@ public class UserService {
     }
 
     @Transactional
-    public void update(Users user, UserRecord userRecord) {
+    public Users update(Users user, UserRecord userRecord) {
 
         if (userRecord.name() != null) {
             user.setName(userRecord.name());
@@ -71,6 +71,8 @@ public class UserService {
             user.setBirthDay(userRecord.birthDay());
             insert(user);
         }
+
+        return user;
 
     }
 
@@ -116,4 +118,5 @@ public class UserService {
     public void setAddressService(AddressService addressService) {
         this.addressService = addressService;
     }
+
 }
