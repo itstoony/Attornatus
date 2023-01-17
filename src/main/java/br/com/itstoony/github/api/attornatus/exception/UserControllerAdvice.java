@@ -2,6 +2,7 @@ package br.com.itstoony.github.api.attornatus.exception;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -50,6 +51,20 @@ public class UserControllerAdvice {
                 .status(BAD_REQUEST.value())
                 .error("Bad Request")
                 .message(ex.getMessage())
+                .path(request.getRequestURI())
+                .build();
+
+        return ResponseEntity.status(BAD_REQUEST).body(error);
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<?> dataIntegrityException(HttpServletRequest request) {
+
+        var error = DefaultError.builder()
+                .timestamp(System.currentTimeMillis())
+                .status(BAD_REQUEST.value())
+                .error("Bad Request")
+                .message("Can't insert duplicated entity")
                 .path(request.getRequestURI())
                 .build();
 
