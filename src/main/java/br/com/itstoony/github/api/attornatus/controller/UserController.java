@@ -6,6 +6,10 @@ import br.com.itstoony.github.api.attornatus.model.dto.UserRecord;
 import br.com.itstoony.github.api.attornatus.model.dto.UsersDto;
 import br.com.itstoony.github.api.attornatus.service.AddressService;
 import br.com.itstoony.github.api.attornatus.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@Tag(name = "Users", description = "API responsible for users maintenance.")
 public class UserController {
 
     @Autowired
@@ -26,6 +31,11 @@ public class UserController {
     private AddressService addressService;
 
 
+    @Operation(summary = "Create a user", description = "Create a new user with the provided information.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "User created successfully"),
+            @ApiResponse(responseCode = "400", description = "Failed to create user")
+    })
     @PostMapping
     public ResponseEntity<Void> create(@RequestBody @Valid UserRecord record) {
         var user = userService.insertByRecord(record);
@@ -38,6 +48,11 @@ public class UserController {
         return ResponseEntity.created(uri).build();
     }
 
+    @Operation(summary = "Find an user by id")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User details successfully obtained."),
+            @ApiResponse(responseCode = "400", description = "Falied to find user.")
+    })
     @GetMapping(path = "/{id}")
     public ResponseEntity<UsersDto> findById(@PathVariable Long id) {
         var user = userService.findById(id);
@@ -47,7 +62,11 @@ public class UserController {
         return ResponseEntity.ok(dto);
     }
 
-
+    @Operation(summary = "Update an user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "User successfully updated."),
+            @ApiResponse(responseCode = "400", description = "Failed to update user.")
+    })
     @PutMapping(path = "/{id}")
     public ResponseEntity<UsersDto> update(@PathVariable Long id, @RequestBody @Valid UserRecord record) {
 
@@ -61,6 +80,11 @@ public class UserController {
 
     }
 
+    @Operation(summary = "Get all addresses from an user")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Users addressList successfully obtained."),
+            @ApiResponse(responseCode = "400", description = "Failed to get users addressList.")
+    })
     @GetMapping(path = "/{id}/address")
     public ResponseEntity<List<Address>> getAddress(@PathVariable Long id) {
         var user = userService.findById(id);
@@ -68,6 +92,11 @@ public class UserController {
         return ResponseEntity.ok(user.getAddress());
     }
 
+    @Operation(summary = "Add a new address to an user.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "New address added successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to add new address")
+    })
     @PostMapping(path = "/{id}/address")
     public ResponseEntity<Void> addAddress(@PathVariable Long id, @RequestBody UserRecord record) {
         var user = userService.findById(id);
@@ -80,6 +109,11 @@ public class UserController {
         return ResponseEntity.created(uri).build();
     }
 
+    @Operation(summary = "Set an address as a users main address")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Address setted as main successfully."),
+            @ApiResponse(responseCode = "400", description = "Failed to set address as main")
+    })
     @PutMapping(path = "/{userId}/address/{addressId}")
     public ResponseEntity<Void> setMainAddress(@PathVariable Long userId, @PathVariable Long addressId) {
         var user = userService.findById(userId);
