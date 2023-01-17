@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @PostMapping(path = "/{id}/address")
-    public ResponseEntity<Void> addAddress(@PathVariable Long id, @RequestBody @Valid UserRecord record) {
+    public ResponseEntity<Void> addAddress(@PathVariable Long id, @RequestBody UserRecord record) {
         var user = userService.findById(id);
 
         var address = userService.addAddress(user, record);
